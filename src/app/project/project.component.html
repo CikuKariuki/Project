@@ -1,0 +1,10 @@
+<h1>New Projects</h1>
+<app-project-form (addProject)="addNewProject($event)"></app-project-form>
+<ul>
+  <div *ngFor='let project of projects;let i=index'>
+    <li appStrikethrough id="{{i}}">{{project.name}} done by {{project.completeDate|dateCount}}days </li>
+    <button (click)='toggleDetails(i)'>Toggle Details?</button>
+    <app-project-details [project]='project' *ngIf="project.showDescription" (isComplete)='deleteProject($event,i)'></app-project-details>
+  </div>
+  </ul>
+<p *ngIf='projects.length > 5'>Why not finish the first five first?</p>
