@@ -1,20 +1,31 @@
 import { Component, OnInit } from '@angular/core';
-import {Project} from '../project'
+import {Projects} from '../projects'
+import { ProjectService } from '../projects/project.service';
+import { Project } from '../project';
+import {AlertsService} from '../alert-service/alerts.service'
+import {HttpClient} from '@angular/common/http'
+import {Quote} from '../quote-class/quote'
+import {QuoteRequestService} from '../quote-http/quote-request.service'
+import { Router} from '@angular/router';
 
 @Component({
   selector: 'app-project',
   templateUrl: './project.component.html',
+  providers:[ProjectService, QuoteRequestService],
   styleUrls: ['./project.component.css']
 })
 export class ProjectComponent implements OnInit {
- projects=[
-  new Project(1,'Watch Finding Nemo','None', new Date(2019,8,25,)),
-  new Project(2,'Buy Cookies',"Can't think of any", new Date(2015,2,3)),
-  new Project(3, 'Get new Phone Case','Nope', new Date(2022,2,6)),
-  new Project(4, 'Get Dog Food','Moving on', new Date(5286,5,8)),
-  new Project(5, 'Solve math homework','Lalala', new Date(4657,5,6)),
-  new Project(6, 'Plot my world domination plan','Muahahaha!', new Date(5898,2,5)),
- ]
+  projects = Projects;
+  alertService:AlertsService;
+  quote:Quote;
+  goToUrl(id){
+    this.router.navigate(['/projects',id])
+}
+
+  constructor(projectService:ProjectService, alertService:AlertsService,private quoteService:QuoteRequestService,private router:Router){
+    this.projects=projectService.getProjects();
+    this.alertService=alertService; //makes the service available to the class
+   }
  toggleDetails(index){
    this.projects[index].showDescription = !this.projects[index].showDescription;
  }
@@ -23,7 +34,8 @@ export class ProjectComponent implements OnInit {
     let toDelete=confirm('Are you sure you want to delete this project?')
     
     if(toDelete){
-      this.projects.splice(index,1);
+      this.projects.splice(index,1)
+      this.alertService.alertMe("Project has been deleted!")
       }
       }
     }
@@ -34,9 +46,23 @@ export class ProjectComponent implements OnInit {
       this.projects.push(project)
 
   }
-  constructor() { }
 
   ngOnInit() {
+    this.quoteService.quoteRequest()
+    this.quote=this.quoteService.quote
   }
-
 }
+    // interface ApiResponse{
+    //   quote:string;
+    //   author:string
+    // // }
+    // this.http.get<ApiResponse>("http://quotes.stormconsultancy.co.uk/random.json").subscribe(data=>{
+    //     this.quote= new Quote(data.quote,data.author) 
+
+    //  },err=>{
+    //   this.quote= new Quote("Never, never, never give up.","winston churchill")
+    //   console.log("Error occured ")
+    //  })
+    // }
+  
+  

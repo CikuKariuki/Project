@@ -1,10 +1,19 @@
-<h1>New Projects</h1>
+<ng-progress></ng-progress>
+  <h1>New Projects</h1>
+
+      <blockquote class="text-center text-lg">
+          <p>{{quote.quote}}</p>
+          <footer><cite>{{quote.author}}</cite></footer>
+      </blockquote>
+
+
 <app-project-form (addProject)="addNewProject($event)"></app-project-form>
 <ul>
   <div *ngFor='let project of projects;let i=index'>
-    <li appStrikethrough id="{{i}}">{{project.name}} done by {{project.completeDate|dateCount}}days </li>
-    <button (click)='toggleDetails(i)'>Toggle Details?</button>
-    <app-project-details [project]='project' *ngIf="project.showDescription" (isComplete)='deleteProject($event,i)'></app-project-details>
+    <h4 appStrikethrough id="{{i}}">{{project.name}} done by {{project.completeDate|dateCount}}days </h4>
+    <button (click)=goToUrl(project.id)>View Details</button>
+    <button (click) = 'deleteGoal(i)'id="Delete">Delete Goal </button>
+    <!-- <app-project-details [project]='project' *ngIf="project.showDescription" (isComplete)='deleteProject($event,i)'></app-project-details> -->
   </div>
   </ul>
 <p *ngIf='projects.length > 5'>Why not finish the first five first?</p>
